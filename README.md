@@ -4,7 +4,7 @@ Fullstack Serverless Application on AWS
 
 ## Design
 
-![](image.png)
+![](/image.png)
 
 ## Amazon DynamoDB
 
