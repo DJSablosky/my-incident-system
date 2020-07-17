@@ -2,6 +2,10 @@
 
 Fullstack Serverless Application on AWS
 
+## Design
+
+![](image.png)
+
 ## Amazon DynamoDB
 
 ## AWS Identity & Access Management (IAM)
