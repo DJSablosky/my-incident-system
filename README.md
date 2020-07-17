@@ -2,10 +2,6 @@
 
 Fullstack Serverless Application on AWS
 
-## Architecture
-
-![Design](IMS.png)
-
 ## Amazon DynamoDB
 
 ## AWS Identity & Access Management (IAM)
@@ -15,6 +11,7 @@ Fullstack Serverless Application on AWS
 ## Amazon API Gateway
 
 ## Amazon S3
+[Development Website](http://djs-incident-management-system.s3-website-us-east-1.amazonaws.com)
 
 ## Built With
 
