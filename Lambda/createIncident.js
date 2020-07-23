@@ -11,11 +11,11 @@ module.exports.create = (event, context, callback) => {
   const params = {
     TableName: 'Incidents',
     Item: {
-      Title: data.Title,
-      Date: data.Date,
-      Description: data.Description,
-      Status: data.Status,
-      Type: data.Type
+      IncidentTitle: data.IncidentTitle,
+      IncidentDate: data.IncidentDate,
+      IncidentDescription: data.IncidentDescription,
+      IncidentStatus: data.IncidentStatus,
+      IncidentType: data.IncidentType
     },
   };
 

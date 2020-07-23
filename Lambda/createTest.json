@@ -1,1 +1,1 @@
-{"body": "{\"Title\": \"Test\",\"Date\": \"2020-07-16\",\"Description\": \"Nunc viverra imperdiet enim.\",\"Status\": \"Closed\",\"Type\": \"IT Support\"}"}
+{"body": "{\"IncidentTitle\": \"Tornado in Tulsa\",\"IncidentDate\": \"2020-07-23\",\"IncidentDescription\": \"Lorem ipsum dolor sit amet, consectetuer adipiscing elit.\",\"IncidentStatus\": \"Open\",\"IncidentType\": \"Natural Hazard\"}"}

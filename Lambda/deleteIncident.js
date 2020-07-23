@@ -11,8 +11,8 @@ module.exports.delete = (event, context, callback) => {
   const params = {
     TableName: 'Incidents',
     Key: {
-      "Title": data.Title,
-      "Date": data.Date
+      "IncidentTitle": data.IncidentTitle,
+      "IncidentDate": data.IncidentDate
     },
   }
 

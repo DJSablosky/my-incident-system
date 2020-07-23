@@ -11,16 +11,14 @@ module.exports.update = (event, context, callback) => {
   const params = {
     TableName: 'Incidents',
     Key: {
-      "Title": data.Title,
-      "Date": data.Date
+      "IncidentTitle": data.IncidentTitle,
+      "IncidentDate": data.IncidentDate
     },
-    UpdateExpression: "set Title=:Title, Date=:Date, Description=:Description, Status=:Status, Type=:Type",
-    ExpressionAttributeValues: {
-        ":Title": data.Title,
-        ":Date": data.Date,
-        ":Description": data.Description,
-        ":Status": data.Status,
-        ":Type": data.Type
+    UpdateExpression: "set IncidentDescription=:IncidentDescription, IncidentStatus=:IncidentStatus, IncidentType=:IncidentType",
+    ExpressionAttributeValues:{
+        ":IncidentDescription": data.IncidentDescription,
+        ":IncidentStatus": data.IncidentStatus,
+        ":IncidentType": data.IncidentType
     },
     ReturnValues:"ALL_NEW"
   };
@@ -46,4 +44,4 @@ module.exports.update = (event, context, callback) => {
     };
     callback(null, response);
   });
-}
+};
