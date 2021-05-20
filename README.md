@@ -105,6 +105,7 @@ aws lambada invoke --function-name deleteIncident \
 ## Authors
 
 * **Daniel J. Sablosky** - *Initial work* - [Portfolio](https://portfolio.djsablosky.info)
+* **Patrick Chou** - *Static website* - [Projects](https://pchou9.com/)
 
 ## License
 

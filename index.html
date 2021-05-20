@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="Incident Management System">
@@ -9,54 +10,192 @@
     <title>Incident Management System</title>
 
     <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    
-    <!-- Custom styles for this template -->
-    <link href="main.css" rel="stylesheet">
-    
-    <!-- JavaScript stuff for the sending of requests -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/3.1.0/fetch.min.js"></script>
-    
-  </head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+        crossorigin="anonymous"></script>
 
-  <body>
+    <link rel="stylesheet" href="main.css">
 
-    <div class="container">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
 
-      <form class="form-signin">
-        <h2 class="form-signin-heading">Incident Management System</h2>
-        <div id='error-message'></div>
-        <div id='success-message'></div>
-        <p>You can list the items without adding any values.</p>
-        <button id="listButton" class="btn btn-md btn-primary btn-block" type="submit">list</button>
-        <hr>
-        <p>Add the Title and Date values to get a specific item or delete a specific item.</p>
-        <label for="Title" class="sr-only">Title</label>
-        <input type="email" id="Title" class="form-control" placeholder="Title">
-        <label for="Date" class="sr-only">Date</label>
-        <input type="bottom" id="Date" class="form-control" placeholder="Date">
-        <button id="getButton" class="btn btn-md btn-primary btn-block" type="submit">get</button>
-        <button id="deleteButton" class="btn btn-md btn-primary btn-block" type="submit">delete</button>
-        <hr>
-        <p>Also add the values below in order to update an exisiting item or create a new item.</p>
-        <label for="Description" class="sr-only">Description</label>
-        <input type="email" id="Description" class="form-control" placeholder="Description">
-        <label for="Status" class="sr-only">Status</label>
-        <input type="Status" id="Status" class="form-control" placeholder="Status">
-        <label for="Type" class="sr-only">Type</label>
-        <input type="email" id="Type" class="form-control" placeholder="Type">
-        <button id="updateButton" class="btn btn-md btn-primary btn-block" type="submit">update</button>
-        <button id="createButton" class="btn btn-md btn-primary btn-block" type="submit">create</button>
-        <br>
-        <div id='results-message'></div>
-      </form>
-    
-    </div> <!-- /container -->
+<body>
+    <div id="app">
+        <div class="container">
+            <h2 class="form-signin-heading">Incident Management System</h2>
+            <h3 v-if="incidents == null">Loading...</h3>
+            <p v-if="incidents != null">Updated {{ updatedTime }} <button v-on:click="fetchData()" type="button" class="btn btn-link" style="margin-bottom: 4px">Refresh</button></p>
+            <table class="table table-hover table-bordered" v-if="incidents != null" style="background: #fff">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Title</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(currIncident, index) in incidents.Items">
+                        <td>{{ currIncident.IncidentTitle }}</td>
+                        <td>{{ currIncident.IncidentDate }}</td>
+                        <td>{{ currIncident.IncidentStatus }}</td>
+                        <td>{{ currIncident.IncidentDescription }}</td>
+                        <td>{{ currIncident.IncidentType }}</td>
+                        <td>
+                            <button v-on:click="setupEdit(currIncident)" :id="index" type="button" class="btn btn-md btn-primary btn-block" data-toggle="modal" data-target="#editModal">
+                                Edit
+                            </button>
+                            <button v-on:click="deleteByTitleDate(currIncident.IncidentTitle, currIncident.IncidentDate)" :id="index"
+                                class="btn btn-md btn-danger btn-block">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <hr>
 
-    <script src="formlogic.js"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.7/js/tether.min.js" integrity="sha512-X7kCKQJMwapt5FCOl2+ilyuHJp+6ISxFTVrx+nkrhgplZozodT9taV2GuGHxBgKKpOJZ4je77OuPooJg9FJLvw==" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
-  </body>
+            <div class="card">
+                <div class="card-header" id="headingOne">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne"
+                            aria-expanded="true" aria-controls="collapseOne">
+                            <h4>Create New Incident</h4>
+                        </button>
+                    </h5>
+                </div>
+
+                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="titleInput">Title</label>
+                            <input v-model="incidentTitle" class="form-control" id="titleInput" placeholder="Title">
+                        </div>
+                        <div class="form-group">
+                            <label for="dateInput">Date</label>
+                            <input v-model="incidentDate" type="date" class="form-control" id="dateInput">
+                        </div>
+                        <div class="form-group">
+                            <label for="statusInput">Status</label>
+                            <input v-model="incidentStatus" class="form-control" id="statusInput" placeholder="Status">
+                        </div>
+                        <div class="form-group">
+                            <label for="descriptionInput">Description</label>
+                            <textarea v-model="incidentDescription" class="form-control" id="descriptionInput" rows="2"
+                                placeholder="Description"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="typeInput">Type</label>
+                            <input v-model="incidentType" class="form-control" id="typeInput" placeholder="Type">
+                        </div>
+                        <button v-on:click="submitData()" class="btn btn-primary">Submit</button>
+                        {{ submitStatus }}
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" id="headingOne">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseTwo"
+                            aria-expanded="true" aria-controls="collapseTwo">
+                            <h4>Get Incident By Title & Date</h4>
+                        </button>
+                    </h5>
+                </div>
+
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingOne">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="titleInput">Title</label>
+                            <input v-model="getTitle" class="form-control" id="titleSingleInput" placeholder="Title">
+                        </div>
+                        <div class="form-group">
+                            <label for="dateInput">Date</label>
+                            <input v-model="getDate" type="date" class="form-control" id="dateSingleInput">
+                        </div>
+
+                        <button v-on:click="getByTitleDate(getTitle, getDate)" class="btn btn-primary">Get</button>
+                        {{ getOneStatus }}
+
+                        <br><br>
+
+                        <table class="table table-hover table-bordered" v-if="incidents != null">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">Title</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Description</th>
+                                    <th scope="col">Type</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>{{ singleIncident.IncidentTitle }}</td>
+                                    <td>{{ singleIncident.IncidentDate }}</td>
+                                    <td>{{ singleIncident.IncidentStatus }}</td>
+                                    <td>{{ singleIncident.IncidentDescription }}</td>
+                                    <td>{{ singleIncident.IncidentType }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="editModalLabel">Edit:</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <div class="card-body">
+                        <div class="form-group">
+                            <label for="editTitle">Title</label>
+                            <input v-model="editTitle" class="form-control" id="editTitle" placeholder="Title" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="editDate">Date</label>
+                            <input v-model="editDate" type="date" class="form-control" id="editDate" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="editStatus">Status</label>
+                            <input v-model="editStatus" class="form-control" id="editStatus" placeholder="Status">
+                        </div>
+                        <div class="form-group">
+                            <label for="editDescription">Description</label>
+                            <textarea v-model="editDescription" class="form-control" id="editDescription" rows="2"
+                                placeholder="Description"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="editType">Type</label>
+                            <input v-model="editType" class="form-control" id="editType" placeholder="Type">
+                        </div>
+                    </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button v-on:click="saveEdit()" type="button" class="btn btn-primary" data-dismiss="modal">Save changes</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app-vue.js"></script>
+</body>
+
 </html>
